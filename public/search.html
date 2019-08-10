@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--Plane Icon-->
+  <link rel="shortcut icon" href="assets/images/icon.png" type="favicon/ico"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <title>FlightSearch</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-company-blue">
+        <a class="navbar-brand" href="index.html">SoarPedia</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+      
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="search.html">Flight Search</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="./flighttime.html">Time To Arrive</a>
+              </li>
+            <li class="nav-item">
+                  <a class="nav-link" href="stats.html">Flight Stats</a>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link" href="developer.html">The Developer</a>
+            </li>          
+          </ul>
+          <span class="navbar-text">
+      
+          </span>
+        </div>
+      </nav>
+
+    <div class="jumbotron text-center">
+        <div class="jumbotron text-center">
+            <img src="assets/images/logo.png" alt="Image">
+            <h4>THE SIMPLE WAY TO GET THE INFORMATION YOU NEED <br>
+              TO SOAR THE SKIES</h4>
+        
+        </div>
+      
+
+<!-- Flight Form Select Box -->
+<form id="flightNumber-form">
+
+   
+  <label for="flight-input">Enter Your Flight Number: </label>
+<br>
+  <!-- Text Input Box -->
+  <input type="text" id="flight-input" placeholder="ie: AA1234"><br>
+  <br>
+
+  <!-- Submit Button -->
+  <button id="select-flight" type="button" class="btn btn-primary"> Search</button>
+
+
+</form>
+
+<div id="flight-div">
+
+  </div>
+    
+  </div>
+
+<br>
+<br>
+
+<div class="footer">
+    <p> &copy SoarPedia 2019 . All Rights Reserved. </p>
+  </div>
+
+<script type="text/javascript">
+
+function searchAirlineInfo(flights) {
+    // This is my paid API key :)
+    var APIKey = "ebe432-13fff1";
+    // Here is the queryURL variable that stores the URL
+    var queryURL = "https://aviation-edge.com/v2/public/flights?key=" + APIKey;
+    // Running AJAX call to the Aviation Edge API
+    $.ajax({
+    url: queryURL,
+    dataType: "html",
+    method: "GET"
+    })
+    // Storing all of the retrieved data inside of an object called "response"
+    
+    .then(function(response) {
+    // Logging the queryURL
+    console.log(queryURL);
+    // Logging the resulting object (all airlines)
+    var data = JSON.parse(response);
+    var searchTerm = document.getElementById("flight-input").value;
+    console.log(searchTerm);
+    var filtered = data.filter(function(flight){
+        console.log(flight.flight.iataNumber)
+         return flight.flight.iataNumber === searchTerm;
+    })
+    console.log(filtered)
+    // Empty contents of the flight-div
+    $("#flight-div").empty();
+    filtered.map(function(flight) {
+        var airline = $("<h1>").text('Airline: ' + flight.airline.iataCode);
+        var arrival = $("<h1>").text('Arrival: ' + flight.arrival.iataCode);
+        var departure = $("<h1>").text('Departure: ' + flight.departure.iataCode);
+        var aircraft = $("<h1>").text('Aircraft Type: ' + flight.aircraft.icaoCode);
+        var registration = $("<h1>").text('Aircraft Registration:' + flight.aircraft.regNumber);
+        var flightNumber = $("<h1>").text('Flight Number: ' + flight.flight.iataNumber);
+        var status = $("<h1>").text(' Flight Status: ' + flight.status);
+        var altitude = $("<h1>").text('Aircraft Altitude (M): ' + flight.geography.altitude);
+        var speed = $("<h1>").text('Speed (Km/H): ' + flight.speed.horizontal);
+        
+        var container = $('<div>').append(airline, arrival, departure, aircraft, registration, flightNumber, status, altitude, speed);
+        
+        $('#flight-div').append(container);
+
+    })
+ 
+    // Both of these are coming out the same
+    // console.log(JSON.parse(response))
+    
+    });
+    }
+    // Event handler for user clicking the select-flight button
+    $("#select-flight").on("click", function(event){
+    // Preventing the button from trying to submit the form
+    event.preventDefault();
+    // Storing the flight info
+    var inputFlight = $("#flight-input").val().trim();
+    // Running the searchAirlineInfo function (passing in the flight as argument)
+    searchAirlineInfo(inputFlight);
+
+    //Creating and running a function to display the flight-info DIV only after the ajax call has been completed
+    //and display the flight information dynamically
+    function displayDiv() {
+          document.getElementById("flight-div").style.display = "block";
+        }
+      displayDiv()
+    });
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+            
+</body>
+</html>
