@@ -158,11 +158,7 @@ nav {
 .bg-company-blue {
   background-color: #516A9B;
 }
-  
-         
-.epic{
-    text-align: center;
-  }
+
   
 p{text-align: center;
   font: 200;
@@ -224,7 +220,7 @@ h2 {
  
 #navigatepic {
   align-items: center;
-  width:50%;
+  width:30%;
   height:100%
 }
 
