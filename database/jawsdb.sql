@@ -1,4 +1,4 @@
-USE oczmbmjm71qqal33;
+USE jjey6fwqn7sd2fj0;
 DROP TABLE IF EXISTS airport;
 CREATE TABLE airport (
   id int(11) NOT NULL AUTO_INCREMENT,
